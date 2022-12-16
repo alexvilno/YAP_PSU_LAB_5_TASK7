@@ -313,7 +313,7 @@ for (int i = 0; i < split.Length; ++i)
 ```
 Создадим еще 2 хешсета. Один будет использоваться для конкретного четного слова, второй - будет объединением пересечения первого и ```letters```
 
-```
+```c#
 HashSet<char> i_2chars = new HashSet<char>();
 HashSet<char> i_2chars_union = new HashSet<char>();
 
