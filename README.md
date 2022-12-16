@@ -270,7 +270,7 @@ LAZURIT IKEA DOMADOM
 ```c#
 HashSet<char> letters = new HashSet<char>();
 HashSet<char> exists = new HashSet<char>();
-string cons = "БВГДЖЗЛМНРЦЧбвгджзлмнрцч";
+string cons = "ПФКТШСХЦЧЩпфктшсхцчщ";
 
 foreach (char i in cons)
 {
