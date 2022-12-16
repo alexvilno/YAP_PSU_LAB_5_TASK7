@@ -1,20 +1,14 @@
-﻿using System;
+using System;
 namespace PSU_PL_LAB5_TASK_7
 {
     public class Solutions
     {
-        public static void TASK_1()
+        public static void TASK_1<T>(ref List<T> list)
         {
             Console.WriteLine("ЗАДАЧА 1");
-
-            List<int> list = new List<int>();
             Random rnd = new Random();
             Console.WriteLine("Дан список: ");
-            for (int i = 0; i < 10; ++i)
-            {
-                list.Add(rnd.Next(1, 100));
-            }
-            foreach (int i in list)
+            foreach (var i in list)
             {
                 Console.Write(i + " ");
             }
@@ -22,7 +16,7 @@ namespace PSU_PL_LAB5_TASK_7
             Console.WriteLine();
             Console.WriteLine("Ответ: ");
             (list[0], list[^1]) = (list[^1], list[0]);
-            foreach (int i in list)
+            foreach (var i in list)
             {
                 Console.Write(i + " ");
             }
@@ -31,18 +25,10 @@ namespace PSU_PL_LAB5_TASK_7
             Console.WriteLine(new String('-', 40));
         }
 
-        public static void TASK_2()
+        public static void TASK_2<T>(ref LinkedList<T> list)
         {
             Console.WriteLine("ЗАДАЧА 2");
-
-            LinkedList<int> list = new LinkedList<int>();
-            Random rnd = new Random();
-            Console.WriteLine("Дан список: ");
-            for (int i = 0; i < 10; ++i)
-            {
-                list.AddFirst(rnd.Next(1, 10));
-            }
-            foreach (int i in list)
+            foreach (var i in list)
             {
                 Console.Write(i + " ");
             }
@@ -55,7 +41,7 @@ namespace PSU_PL_LAB5_TASK_7
             while (current != null && current != list.Last && list.Count >= 3)
             {
                 var old_cur = current;
-                if (current.Previous.Value == current.Next.Value)
+                if (current.Previous.Value.ToString() == current.Next.Value.ToString())
                 {
                     old_cur = current;
                     list.Remove(current);
@@ -64,19 +50,19 @@ namespace PSU_PL_LAB5_TASK_7
                 current = old_cur.Next;
             }
 
-            if (list.Last.Previous.Value == list.First.Value)
+            if (list.Last.Previous.Value.ToString() == list.First.Value.ToString())
             {
                 list.Remove(list.Last);
             }
 
-            if (list.Last.Value == list.First.Next.Value)
+            if (list.Last.Value.ToString() == list.First.Next.Value.ToString())
             {
                 list.Remove(list.First);
             }
 
             Console.WriteLine("Ответ: ");
 
-            foreach (int i in list)
+            foreach (var i in list)
             {
                 Console.Write(i + " ");
             }
@@ -210,7 +196,7 @@ namespace PSU_PL_LAB5_TASK_7
 
             HashSet<char> letters = new HashSet<char>();
             HashSet<char> exists = new HashSet<char>();
-            string cons = "БВГДЖЗЛМНРЦЧбвгджзлмнрцч";
+            string cons = "ПФКТШСХЦЧЩпфктшсхцчщ";
 
             foreach (char i in cons)
             {
@@ -228,7 +214,7 @@ namespace PSU_PL_LAB5_TASK_7
             string[] split = s.Split(' ');
             for (int i = 0; i < split.Length; ++i)
             {
-                if (i % 2 == 0)
+                if (i % 2 != 0)
                 {
                     continue;
                 }
@@ -248,12 +234,31 @@ namespace PSU_PL_LAB5_TASK_7
                 }
             }
 
+            HashSet<char> i_2chars = new HashSet<char>();
+            HashSet<char> i_2chars_union = new HashSet<char>();
+
+            for (int i = 0; i < split.Length; ++i)
+            {
+                if (i % 2 == 0)
+                {
+                    continue;
+                }
+                foreach (char c in split[i])
+                {
+                    i_2chars.Add(c);
+                }
+                i_2chars.IntersectWith(letters);
+                i_2chars_union.UnionWith(i_2chars);
+            }
+
             res.Sort();
 
             foreach (char c in res)
             {
                 exists.Add(c);
             }
+
+            exists.ExceptWith(i_2chars_union);
 
             Console.Write("Ответ: ");
 
