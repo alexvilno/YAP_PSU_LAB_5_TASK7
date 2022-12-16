@@ -5,29 +5,52 @@
 ## Задание 1. Решить задачу, используя класс List
 Составить программу, которая переносит в конец непустого списка L его
 первый элемент.
-Создаем новый список и добавляем туда 10 случайных чисел.
 
 ```c#
-List<int> list = new List<int>();
-Random rnd = new Random();
-Console.WriteLine("Дан список: ");
-for (int i = 0; i < 10; ++i)
+public static void TASK_1<T>(ref List<T> list) //T - параметр типа
 {
-    list.Add(rnd.Next(1, 100));
-}
-foreach (int i in list)
-{
-    Console.Write(i + " ");
-}
+    Console.WriteLine("ЗАДАЧА 1");
+    Random rnd = new Random();
+    Console.WriteLine("Дан список: ");
+    foreach (var i in list)
+    {
+        Console.Write(i + " ");
+    }
 
-Console.WriteLine();
-Console.WriteLine("Ответ: ");
-(list[0], list[^1]) = (list[^1], list[0]); //swap
+    Console.WriteLine();
+    Console.WriteLine("Ответ: ");
+    (list[0], list[^1]) = (list[^1], list[0]);
+    foreach (var i in list)
+    {
+        Console.Write(i + " ");
+    }
+
+    Console.WriteLine();
+    Console.WriteLine(new String('-', 40));
+}
 ```
 
 И меняем первый и последний элементы местами.
 
-Вывод:
+
+Например для списка 
+```
+a b c
+```
+
+Будет выведено:
+
+```
+c b a
+```
+Для списка 
+
+```
+60 5 27 33 17 50 23 76 74 3 
+```
+
+Будет выведено:
+
 ```
 ЗАДАЧА 1
 Дан список: 
@@ -43,16 +66,10 @@ Console.WriteLine("Ответ: ");
 которых одинаковые «соседи» (первый и последний элементы считать
 соседями);
 
-Создаем LinkedList и заполняем его случайными числами
+LinkedList передается по ссылке в качестве параметра функции ```TASK_2();```
 
 ```c#
-LinkedList<int> list = new LinkedList<int>();
-Random rnd = new Random();
-Console.WriteLine("Дан список: ");
-for (int i = 0; i < 10; ++i)
-{
-    list.AddFirst(rnd.Next(1, 10));
-}
+public static void TASK_2<T>(ref LinkedList<T> list);
 ```
 
 Создаем указатель на первый узел в списке и двигаем его на следующий элемент (это нужно для того, чтобы проверить prev)
@@ -68,7 +85,7 @@ current = current.Next;
 while (current != null && current != list.Last && list.Count >= 3)
 {
     var old_cur = current;
-    if (current.Previous.Value == current.Next.Value)
+    if (current.Previous.Value.ToString() == current.Next.Value.ToString())
     {
         old_cur = current;
         list.Remove(current); //удаляем элемент с одинаковыми соседями
@@ -81,15 +98,19 @@ while (current != null && current != list.Last && list.Count >= 3)
 Следующие две проверки позволяют обработать ситуацию, если соседи элемента находятся на разных концах списка:
 
 ```c#
-if (list.Last.Previous.Value == list.First.Value)
+if (list.Last.Previous.Value.ToString() == list.First.Value.ToString())
 {
     list.Remove(list.Last);
 }
 
-if (list.Last.Value == list.First.Next.Value)
+if (list.Last.Value.ToString() == list.First.Next.Value.ToString())
 {
     list.Remove(list.First);
 }
+```
+Например для списка 
+```
+6 2 6 1 4 1 1 9 9 7 
 ```
 
 Вывод:
@@ -99,6 +120,19 @@ if (list.Last.Value == list.First.Next.Value)
 6 2 6 1 4 1 1 9 9 7 
 Ответ: 
 6 6 1 4 1 1 9 9 7 
+----------------------------------------
+```
+
+А для списка
+```
+d c a b a
+```
+Вывод:
+```
+ЗАДАЧА 2
+d c a b a 
+Ответ: 
+d c a a 
 ----------------------------------------
 ```
 
@@ -277,31 +311,41 @@ for (int i = 0; i < split.Length; ++i)
     }
 }
 ```
+Создадим еще 2 хешсета. Один будет использоваться для конкретного четного слова, второй - будет объединением пересечения первого и ```letters```
 
-Потом нужно будет отсортировать res и добавить в ```exists``` его элементы
+```
+HashSet<char> i_2chars = new HashSet<char>();
+HashSet<char> i_2chars_union = new HashSet<char>();
 
-```c#
+for (int i = 0; i < split.Length; ++i)
+{
+    if (i % 2 == 0)
+    {
+        continue;
+    }
+    foreach (char c in split[i])
+    {
+        i_2chars.Add(c);
+    }
+    i_2chars.IntersectWith(letters);
+    i_2chars_union.UnionWith(i_2chars);
+}
+
 res.Sort();
+
 foreach (char c in res)
 {
     exists.Add(c);
 }
 
-Console.Write("Ответ: ");
-
-foreach (char c in exists)
-{
-    Console.Write(c + " ");
-}
+exists.ExceptWith(i_2chars_union);
 ```
+
+Потом нужно будет отсортировать res и добавить в ```exists``` его элементы и вычесть объединение согласных глухих букв ```i_2chars_union```
 
 Для такой строки 
 ```
-Кризис грянул и нет спасенья,
-Нет спасенья, хоть прыгай с кручи…
-Все твои щас и к месту рвенья, глянь какие подходят тучи.
-Глянь, какая сверкнула сабля, сколько сразу голов срубила,
-А за саблей, упала капля, кровь барыги с асфальта смыла.
+Кризис грянул и нет спасенья, нет спасенья, хоть прыгай с кручи… Все твои щас и к месту рвенья, глянь какие подходят тучи. Глянь, какая сверкнула сабля, сколько сразу голов срубила, А за саблей, упала капля, кровь барыги с асфальта смыла.
 ```
 
 Вывод будет таким:
@@ -309,20 +353,19 @@ foreach (char c in exists)
 ЗАДАЧА 4
 Дана строка: 
 Кризис грянул и нет спасенья, нет спасенья, хоть прыгай с кручи… Все твои щас и к месту рвенья, глянь какие подходят тучи. Глянь, какая сверкнула сабля, сколько сразу голов срубила, А за саблей, упала капля, кровь барыги с асфальта смыла.
-Ответ: В б в г з л м н р ч 
-----------------------------------------
+Ответ: К ф
 ```
 
 А для такой строки
-```
-а чцрнЦмлзжЧдгвб
+``` 
+цч цс цчмьс лллв
 ```
 Ответ такой
 ```
+ЗАДАЧА 4
 Дана строка: 
-а чцрнЦмлзжЧдгвб
-Ответ: Ц Ч б в г д ж з л м н р ц ч 
-----------------------------------------
+цч цс цчмьс лллв
+Ответ: ч 
 ```
 
 ## Задание 5. Решить задачу, используя класс Dictionary
